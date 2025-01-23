@@ -1,0 +1,73 @@
+.hero {
+  position: relative;
+  overflow: hidden;  /* Prevent overflow of elements */
+}
+
+.icon {
+  position: absolute;
+  font-size: 35px;
+  color: #ff6f00; /* Orange color for icons */
+  animation: floatIcons 10s infinite ease-in-out;
+  opacity: 0.1;  /* Constant opacity */
+}
+
+/* Different positions and delays for each icon */
+.icon:nth-child(1) {
+  left: 20vw;
+  top: 90vh;  /* Start from the bottom */
+  animation-delay: 0s;
+}
+
+.icon:nth-child(2) {
+  left: 40vw;
+  top: 95vh;  /* Start from the bottom */
+  animation-delay: 2s;
+}
+
+.icon:nth-child(3) {
+  left: 60vw;
+  top: 100vh;  /* Start from the bottom */
+  animation-delay: 4s;
+}
+
+.icon:nth-child(4) {
+  left: 80vw;
+  top: 105vh;  /* Start from the bottom */
+  animation-delay: 6s;
+}
+
+.icon:nth-child(5) {
+  left: 10vw;
+  top: 110vh;  /* Start from the bottom */
+  animation-delay: 8s;
+}
+
+.icon:nth-child(6) {
+  left: 90vw;
+  top: 115vh;  /* Start from the bottom */
+  animation-delay: 10s;
+}
+
+.icon:nth-child(7) {
+  left: 50vw;
+  top: 120vh;  /* Start from the bottom */
+  animation-delay: 12s;
+}
+
+@keyframes floatIcons {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-20vh) rotate(15deg);
+  }
+  50% {
+    transform: translateY(-40vh) rotate(-10deg);
+  }
+  75% {
+    transform: translateY(-60vh) rotate(5deg);
+  }
+  100% {
+    transform: translateY(-80vh) rotate(0deg);
+  }
+}
