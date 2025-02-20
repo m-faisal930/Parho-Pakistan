@@ -66,7 +66,7 @@ const SignupPage = () => {
           className={`h-20 w-20 mb-6`}
         /> */}
         <h1 className="text-2xl font-bold text-gray-800 mb-2 drop-shadow-lg">
-          Startup Sprint
+          Parho Pakistan
         </h1>
       </div>
 

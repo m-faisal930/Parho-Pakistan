@@ -23,18 +23,6 @@ function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
   return (
     <>
-      {/* <ToastContainer
-        position="top-center"
-        autoClose={3000} // Closes after 3 seconds
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light" // You can change to 'dark'
-      /> */}
       <Routes>
         <Route
           path="/"
