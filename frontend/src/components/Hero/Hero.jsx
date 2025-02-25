@@ -84,7 +84,7 @@ export default function Hero() {
               <span className="block">Children</span>
             </h2>
             <p className="text-base md:text-lg mb-6 opacity-80 transition-opacity duration-700 ease-in-out hover:opacity-100">
-              Discover deserving students and contribute now to transform lives
+              Discover Most deserving students and contribute now to transform lives
               and build a brighter future.
             </p>
 
