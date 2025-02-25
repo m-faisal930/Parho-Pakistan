@@ -16,7 +16,6 @@ Parho Pakistan is a web application aimed at providing educational support to st
 ---
 
 ## 🛠️ Tech Stack
-
 **Frontend:**  
 - React.js  
 - Tailwind CSS  
@@ -35,7 +34,6 @@ Parho Pakistan is a web application aimed at providing educational support to st
 - GitHub Actions (CI/CD)  
 
 ---
-
 ## 📂 Project Structure
 =Parho-Pakistan/
 ```
