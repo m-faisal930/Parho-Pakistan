@@ -17,7 +17,9 @@ import AddSchoolPage from './pages/AddSchoolPage/AddSchoolPage';
 import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
 import SplashScreen from './components/SplashScreen/SplashScreen';
 import Schools from './pages/Schools/Schools';
+import StudentAdminProfile from './pages/StudentAdminProfile/StudentAdminProfile';
 import SponsershipPage from './pages/SponsershipPage';
+import SchoolAdminProfile from './pages/SchoolAdminProfile/SchoolAdminProfile';
 
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -50,15 +52,62 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Page404 />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/casedetails" element={isAuthenticated?<CaseDetails />: <Navigate to={'/login'} />} />
+        <Route
+          path="/casedetails"
+          element={
+            isAuthenticated ? <CaseDetails /> : <Navigate to={'/login'} />
+          }
+        />
         <Route path="/cases" element={<FilterPage />} />
 
-        <Route path="/school" element={ isAuthenticated? <SchoolsPage />: <Navigate to={'/login'} />} />
+        <Route
+          path="/school"
+          element={
+            isAuthenticated ? <SchoolsPage /> : <Navigate to={'/login'} />
+          }
+        />
         <Route path="/schools" element={<Schools />} />
-        <Route path="/addstudent" element={ isAuthenticated? <AddStudentPage />: <Navigate to={'/login'} />} />
-        <Route path="/addschool" element={ isAuthenticated? <AddSchoolPage />: <Navigate to={'/login'}/>} />
-        <Route path="/studentprofile" element={isAuthenticated? <StudentProfilePage />: <Navigate to={'/login'} />} />
-        <Route path="/sponsership" element={isAuthenticated? <SponsershipPage />: <Navigate to={'/login'} />} />
+        <Route
+          path="/addstudent"
+          element={
+            isAuthenticated ? <AddStudentPage /> : <Navigate to={'/login'} />
+          }
+        />
+        <Route
+          path="/addschool"
+          element={
+            isAuthenticated ? <AddSchoolPage /> : <Navigate to={'/login'} />
+          }
+        />
+        <Route
+          path="/studentprofile"
+          element={
+            isAuthenticated ? (
+              <StudentProfilePage />
+            ) : (
+              <Navigate to={'/login'} />
+            )
+          }
+        />
+        <Route
+          path="/sponsership"
+          element={
+            isAuthenticated ? <SponsershipPage /> : <Navigate to={'/login'} />
+          }
+        />
+        <Route
+          path="/student/id"
+          element={
+            isAuthenticated ? <StudentAdminProfile /> : <Navigate to={'/login'} />
+          }
+        />
+        <Route
+          path="/school/id"
+          element={
+            isAuthenticated ? <SchoolAdminProfile /> : <Navigate to={'/login'} />
+          }
+        />
+
       </Routes>
     </>
   );

@@ -87,6 +87,9 @@ export default function NavBar() {
               <li>
                 <Link to="/schools">Partner Schools</Link>
               </li>
+              <li className="underline">
+                <Link to="/student/id">Switch to Student</Link>
+              </li>
             </ul>
           </div>
           <Link to="/" className="btn btn-ghost text-xl">
@@ -111,14 +114,15 @@ export default function NavBar() {
             <li>
               <Link to="/schools">Partner Schools</Link>
             </li>
+            <li className="underline ml-5">
+              <Link to="/student/id">Switch to Student</Link>
+            </li>
           </ul>
         </div>
 
         <div className="navbar-end flex items-center space-x-4">
-
-          <div className='hover:cursor-pointer'>
-
-            {isAuthenticated?<MdNotifications />: ''}
+          <div className="hover:cursor-pointer">
+            {isAuthenticated ? <MdNotifications /> : ''}
           </div>
           <div
             onClick={toggleTheme}
