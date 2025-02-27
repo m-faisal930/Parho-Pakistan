@@ -7,11 +7,13 @@ import { Link } from 'react-router-dom';
 import "./Hero.css";
 import { motion, useInView } from 'framer-motion';
 
+
 import { FaBook, FaPencilAlt, FaGraduationCap } from 'react-icons/fa';
 import { MdSchool } from 'react-icons/md';
 import { GiTeacher } from 'react-icons/gi';
 
 export default function Hero() {
+  const notify = () => toast('Wow so easy !');
   const { isDarkMode } = useContext(ThemeContext);
   const words = ['Sustainability', 'Growth', 'Impact'];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -84,8 +86,8 @@ export default function Hero() {
               <span className="block">Children</span>
             </h2>
             <p className="text-base md:text-lg mb-6 opacity-80 transition-opacity duration-700 ease-in-out hover:opacity-100">
-              Discover Most deserving students and contribute now to transform lives
-              and build a brighter future.
+              Discover Most deserving students and contribute now to transform
+              lives and build a brighter future.
             </p>
 
             <div className="flex flex-wrap gap-2">

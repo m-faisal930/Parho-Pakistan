@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import PasswordInput from '../../elements/passwordInput/PasswordInput';
-
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/actions/userAction';
 
@@ -44,10 +43,11 @@ function LoginPage() {
     setError(null);
 
     try {
+      
       await dispatch(login(data));
-      navigate('/dashboard');
+      // navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Invalid credentials, please try again.');
+      setError('Invalid credentials, please try again.');
     } finally {
       setLoading(false);
     }

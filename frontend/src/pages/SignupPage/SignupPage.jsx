@@ -5,6 +5,7 @@ import { signup } from '../../redux/actions/userAction'; // Import signup action
 import { FaArrowLeft } from 'react-icons/fa';
 // import logo from '../../assets/mainLogo.png';
 import PasswordInput from '../../elements/passwordInput/PasswordInput';
+import { toast } from 'react-toastify';
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -33,7 +34,17 @@ const SignupPage = () => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match. Please check and try again.');
+      toast.error('Passwords do not match. Please check and try again.', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      // alert('Passwords do not match. Please check and try again.');
       return;
     }
 
@@ -45,7 +56,19 @@ const SignupPage = () => {
       navigate('/dashboard');
     } catch (error) {
       console.error('Sign-up failed:', error.message);
-      alert(error.message || 'Sign-up failed. Please try again.');
+      toast.error('Sign-up failed. Please try again.', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      
+      
+      // alert(error.message || 'Sign-up failed. Please try again.');
     }
   };
 

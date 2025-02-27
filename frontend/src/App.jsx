@@ -1,6 +1,7 @@
 import Dashboard from './pages/dashboard';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { ToastContainer, Bounce } from 'react-toastify';
 import About from './pages/about';
 import Page404 from './pages/Page404';
 import Contact from './pages/Contact';
@@ -25,6 +26,19 @@ function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <Routes>
         <Route
           path="/"
@@ -98,16 +112,23 @@ function App() {
         <Route
           path="/student/id"
           element={
-            isAuthenticated ? <StudentAdminProfile /> : <Navigate to={'/login'} />
+            isAuthenticated ? (
+              <StudentAdminProfile />
+            ) : (
+              <Navigate to={'/login'} />
+            )
           }
         />
         <Route
           path="/school/id"
           element={
-            isAuthenticated ? <SchoolAdminProfile /> : <Navigate to={'/login'} />
+            isAuthenticated ? (
+              <SchoolAdminProfile />
+            ) : (
+              <Navigate to={'/login'} />
+            )
           }
         />
-
       </Routes>
     </>
   );

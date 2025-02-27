@@ -9,10 +9,11 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
 import { FaSun, FaMoon } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import { toast, Bounce } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../redux/actions/userAction';
+
 
 export default function NavBar() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -23,6 +24,17 @@ export default function NavBar() {
 
     const handleLogout = () => {
       dispatch(logout()); // Call the logout action
+      toast.success(' Logout Successfully!', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      });
       navigate('/login'); // Redirect to login page
     };
 
