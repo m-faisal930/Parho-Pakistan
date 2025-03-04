@@ -28,7 +28,7 @@ export default function FAQs() {
               'You can participate in Parho Pakistan by joining our network of schools, donors, and volunteers. Visit our "Get Involved" page to find out how you can help.',
           },
           {
-            question: 'What resources are available for students?',
+            question: 'What are the facilties available for students?',
             answer:
               'Parho Pakistan provides students with access to free educational resources, including tutoring, study materials, and scholarship opportunities.',
           },

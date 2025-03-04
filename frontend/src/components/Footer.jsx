@@ -37,8 +37,8 @@ export default function Footer() {
           <a className="link link-hover">Press Kit</a>
         </nav>
         <nav>
-          <h6 className="footer-title">Legal</h6>
-          <a className="link link-hover">Terms of Use</a>
+          <h6 className="footer-title">Authentic</h6>
+          <a className="link link-hover">Terms and Conditions</a>
           <a className="link link-hover">Privacy Policy</a>
           <a className="link link-hover">Cookie Policy</a>
         </nav>
