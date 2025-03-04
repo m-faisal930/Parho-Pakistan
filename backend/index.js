@@ -28,7 +28,7 @@ app.use('/protected', authenticateToken);
 app.use('/auth',  authRoutes);
 
 
-app.use('/protected/students', studentRoutes);
+app.use('/protected/student', studentRoutes);
 app.use('/protected/schools', schoolRoutes);
 app.use('/protected/donors', donorRoutes);
 

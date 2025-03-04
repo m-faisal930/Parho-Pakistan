@@ -9,16 +9,33 @@ const AddStudentForm = () => {
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
   
+  const [formData, setFormData] = useState({
+      name: '',
+    });
+
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+      if (error) {
+        setError(null);
+      }
+    };
+    console.log(formData.name);
+
+  
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-light shadow-xl rounded-lg">
-            {/* Back Arrow Button */}
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="absolute top-8 left-8 text-lg focus:outline-none"
-            >
-              <FaArrowLeft className="text-2xl hover:opacity-80 transition-opacity" />
-            </button>
+      {/* Back Arrow Button */}
+      <button
+        onClick={() => navigate('/dashboard')}
+        className="absolute top-8 left-8 text-lg focus:outline-none"
+      >
+        <FaArrowLeft className="text-2xl hover:opacity-80 transition-opacity" />
+      </button>
       {step === 1 && (
         <div>
           <h2 className="text-2xl font-semibold mb-6 text-gray-800">
@@ -32,6 +49,9 @@ const AddStudentForm = () => {
             type="text"
             className="w-full p-3 bg-gray-50 border border-gray-300 rounded-md mb-6 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter full name"
+            onChange={handleChange}
+            name="name"
+            value={formData.name}
           />
 
           <label className="block text-sm font-medium text-gray-700 mb-2">
