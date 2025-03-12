@@ -8,9 +8,14 @@ const userRoutes = require('./src/routes/userRoutes.js');
 const studentRoutes = require('./src/routes/studentRoutes.js');
 const donorRoutes = require('./src/routes/donorRoutes.js');
 const schoolRoutes = require('./src/routes/schoolRoutes.js');
+const caseRoutes = require('./src/routes/caseRoutes.js')
+
 const cors = require('./src/middlewares/cors.js');
 const logger = require('./src/middlewares/logger.js');
 const http = require('http');
+
+
+
 const app = express();
 
 
@@ -29,8 +34,9 @@ app.use('/auth',  authRoutes);
 
 
 app.use('/protected/student', studentRoutes);
-app.use('/protected/schools', schoolRoutes);
+app.use('/protected/school', schoolRoutes);
 app.use('/protected/donors', donorRoutes);
+app.use('/protected/case', caseRoutes);
 
 
 
