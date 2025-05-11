@@ -1,179 +1,385 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify'; // For notifications
+import {
+  FaCheck,
+  FaTimes,
+  FaHistory,
+  FaCalendarAlt,
+  FaUser,
+  FaSearch,
+} from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import { useParams } from 'react-router-dom';
 
-const AttendanceManagement = () => {
+const AttendanceManagement = ({school_id}) => {
+  
+  // const {school_Id} = useParams(); // Assuming you're using react-router-dom to get the schoolId from the URL
   const [students, setStudents] = useState([]);
-  const [attendanceData, setAttendanceData] = useState({});
-  const [selectedDate, setSelectedDate] = useState('');
-  const [isTakingAttendance, setIsTakingAttendance] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [attendanceRecords, setAttendanceRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0]
+  );
+  const [viewMode, setViewMode] = useState('take'); // 'take' or 'view'
+  const [searchTerm, setSearchTerm] = useState('');
+  const [schoolId] = useState(school_id); // Replace with actual school ID
+console.log(schoolId)
 
-  // Sample Students Data
-  const dummyStudents = [
-    { id: 1, name: 'John Doe', class: '10A' },
-    { id: 2, name: 'Jane Smith', class: '10A' },
-    { id: 3, name: 'Alex Johnson', class: '10B' },
-  ];
-
-  // Simulated attendance data for the entire year (for demo purposes)
-  const dummyAttendanceData = {
-    1: {
-      '01/01/2025': 'Present',
-      '02/01/2025': 'Absent',
-      '03/01/2025': 'Present',
-      // More data...
-    },
-    2: {
-      '01/01/2025': 'Absent',
-      '02/01/2025': 'Present',
-      '03/01/2025': 'Present',
-      // More data...
-    },
-    // More students...
-  };
-
-  // Initialize students and default date
   useEffect(() => {
-    setStudents(dummyStudents);
-    setAttendanceData(dummyAttendanceData);
-    setSelectedDate(new Date().toLocaleDateString()); // Default to today's date
-  }, []);
+    console.log('Current viewMode:', viewMode);
+  }, [viewMode]);
+  // Fetch students and attendance data
+  useEffect(() => {
+  
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  // Calculate total presents, absents, and attendance percentage for each student
-  const calculateAttendanceStats = (studentId) => {
-    const attendance = attendanceData[studentId] || {};
-    const totalDays = Object.keys(attendance).length;
-    const presentCount = Object.values(attendance).filter(
-      (status) => status === 'Present'
-    ).length;
-    const absentCount = totalDays - presentCount;
+        // Fetch sponsored students
+        const studentsRes = await fetch(
+          `http://localhost:3000/attendance/students?schoolId=${schoolId}`
+        );
+        const studentsData = await studentsRes.json();
 
-    const attendancePercentage =
-      totalDays === 0 ? 0 : (presentCount / totalDays) * 100;
+        if (!studentsRes.ok) throw new Error(studentsData.message);
 
-    return { presentCount, absentCount, attendancePercentage };
+        // Fetch today's attendance records
+        const attendanceRes = await fetch(
+          `http://localhost:3000/attendance?schoolId=${schoolId}&date=${selectedDate}`
+        );
+        const attendanceData = await attendanceRes.json();
+
+        if (!attendanceRes.ok) throw new Error(attendanceData.message);
+        // console.log("first",attendanceData.data);
+        // console.log("second", studentsData.data);
+
+        setStudents(studentsData.data);
+        setAttendanceRecords(attendanceData.data);
+        console.log(students)
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [selectedDate, schoolId]);
+
+
+
+  // Handle attendance status change
+  const handleStatusChange = async (studentId, status) => {
+    try {
+      const response = await fetch('http://localhost:3000/attendance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          schoolId,
+          studentId,
+          date: selectedDate,
+          status,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message);
+
+      // Update local state
+      const existingIndex = attendanceRecords.findIndex(
+        (record) => record.student._id === studentId
+      );
+
+      if (existingIndex >= 0) {
+        const updatedRecords = [...attendanceRecords];
+        updatedRecords[existingIndex] = data.data;
+        setAttendanceRecords(updatedRecords);
+      } else {
+        setAttendanceRecords([...attendanceRecords, data.data]);
+      }
+
+      toast.success(`Attendance marked as ${status}`);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
-  // Handle changing attendance status for each student
-  const handleAttendanceChange = (studentId, isPresent) => {
-    setAttendanceData((prevData) => ({
-      ...prevData,
-      [studentId]: {
-        ...prevData[studentId],
-        [selectedDate]: isPresent ? 'Present' : 'Absent',
-      },
-    }));
-  };
+  // Filter students based on search
+  const filteredStudents = students.filter((student) =>
+  
+    student.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  // Save attendance function
-  const handleSaveAttendance = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast.success('Attendance saved successfully!');
-      setIsTakingAttendance(false); // Exit the "Taking Attendance" mode
-    }, 1500);
-  };
+  // console.log(filteredStudents);
+
+  
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="attendance-management">
-      <h2 className="text-center font-bold text-2xl mb-6">
-        Attendance Management
-      </h2>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6">Attendance Management</h1>
 
+        {/* Controls */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => {
+                console.log("Setting viewMode to 'take'");
+                
+                setViewMode('take')}}
+              className={`px-4 py-2 rounded-lg ${
+                viewMode === 'take' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+              }`}
+            >
+              Take Attendance
+            </button>
+            <button
+              onClick={() => setViewMode('view')}
+              className={`px-4 py-2 rounded-lg ${
+                viewMode === 'view' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+              }`}
+            >
+              <FaHistory className="inline mr-2" />
+              View Records
+            </button>
+          </div>
 
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <FaCalendarAlt className="absolute left-3 top-3 text-gray-400" />
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="pl-10 pr-4 py-2 border rounded-lg"
+              />
+            </div>
+            <div className="relative">
+              <FaSearch className="absolute left-3 top-3 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search students..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 border rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
 
-      {/* Display Attendance History or Take Attendance */}
-      <div className="mb-6">
-        <h3 className="font-semibold mb-2">
-          {isTakingAttendance
-            ? "Mark Today's Attendance"
-            : 'Attendance History'}
-        </h3>
+        {/* Attendance Taking View */}
+        {viewMode === 'take' && (
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Student
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Grade
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredStudents.length > 0 ? (
 
-        <table className="min-w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="border p-2">Name</th>
-              <th className="border p-2">Attendance Status</th>
-              {!isTakingAttendance && (
-                <>
-                  <th className="border p-2">Total Presents</th>
-                  <th className="border p-2">Total Absents</th>
-                  <th className="border p-2">Attendance Percentage</th>
-                </>
-              )}
-              {isTakingAttendance && <th className="border p-2">Actions</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {students.map((student) => {
-              const { presentCount, absentCount, attendancePercentage } =
-                calculateAttendanceStats(student.id);
+                    filteredStudents.map((student) => {
+                      const attendanceRecord = attendanceRecords.find(
+                        (record) => record.student._id === student._id
+                      );
+                      const status = attendanceRecord?.status || '';
 
-              return (
-                <tr key={student.id}>
-                  <td className="border p-2">{student.name}</td>
-                  <td className="border p-2">
-                    {attendanceData[student.id]?.[selectedDate] || 'Not marked'}
-                  </td>
-                  {!isTakingAttendance && (
-                    <>
-                      <td className="border p-2">{presentCount}</td>
-                      <td className="border p-2">{absentCount}</td>
-                      <td className="border p-2">
-                        {attendancePercentage.toFixed(2)}%
+                      return (
+                        <tr key={student._id}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                                {student.profilePicture ? (
+                                  <img
+                                    src={student.profilePicture}
+                                    alt={student.fullName}
+                                    className="h-full w-full object-cover"
+                                  />
+                                ) : (
+                                  <FaUser className="text-gray-400" />
+                                )}
+                              </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {student.fullName}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">
+                              {student.currentGrade}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex justify-center gap-2">
+                              <button
+                                onClick={() =>
+                                  handleStatusChange(student._id, 'present')
+                                }
+                                className={`px-3 py-1 rounded-md flex items-center gap-1 ${
+                                  status === 'present'
+                                    ? 'bg-green-500 text-white'
+                                    : 'bg-green-100 text-green-800'
+                                }`}
+                              >
+                                <FaCheck /> Present
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleStatusChange(student._id, 'absent')
+                                }
+                                className={`px-3 py-1 rounded-md flex items-center gap-1 ${
+                                  status === 'absent'
+                                    ? 'bg-red-500 text-white'
+                                    : 'bg-red-100 text-red-800'
+                                }`}
+                              >
+                                <FaTimes /> Absent
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleStatusChange(student._id, 'late')
+                                }
+                                className={`px-3 py-1 rounded-md flex items-center gap-1 ${
+                                  status === 'late'
+                                    ? 'bg-yellow-500 text-white'
+                                    : 'bg-yellow-100 text-yellow-800'
+                                }`}
+                              >
+                                Late
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="3"
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
+                        No sponsored students found
                       </td>
-                    </>
+                    </tr>
                   )}
-                  {isTakingAttendance && (
-                    <td className="border p-2">
-                      {/* Checkbox to mark attendance for today */}
-                      <input
-                        type="checkbox"
-                        checked={
-                          attendanceData[student.id]?.[selectedDate] ===
-                          'Present'
-                        }
-                        onChange={(e) =>
-                          handleAttendanceChange(student.id, e.target.checked)
-                        }
-                        className="border p-1"
-                      />
-                      <label className="ml-2">Present</label>
-                    </td>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Attendance Records View */}
+        {viewMode === 'view' && (
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Student
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Grade
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {attendanceRecords.length > 0 ? (
+                    attendanceRecords.map((record) => (
+                      <tr key={record._id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {new Date(record.date).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                              {record.student.profilePicture ? (
+                                <img
+                                  src={record.student.profilePicture}
+                                  alt={record.student.fullName}
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                <FaUser className="text-gray-400" />
+                              )}
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {record.student.fullName}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {record.student.currentGrade}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex justify-center">
+                            <span
+                              className={`px-3 py-1 rounded-full text-sm ${
+                                record.status === 'present'
+                                  ? 'bg-green-100 text-green-800'
+                                  : record.status === 'absent'
+                                  ? 'bg-red-100 text-red-800'
+                                  : 'bg-yellow-100 text-yellow-800'
+                              }`}
+                            >
+                              {record.status.charAt(0).toUpperCase() +
+                                record.status.slice(1)}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
+                        No attendance records found for selected date
+                      </td>
+                    </tr>
                   )}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Take Attendance Button */}
-      {!isTakingAttendance && (
-        <div className="flex justify-center items-center mt-6">
-          <button
-            className="btn bg-blue-500 text-white p-2 rounded-md"
-            onClick={() => setIsTakingAttendance(true)}
-          >
-            Take Attendance for today
-          </button>
-        </div>
-      )}
-
-      {/* Save Attendance Button */}
-      {isTakingAttendance && (
-        <div className="flex justify-between items-center mt-6">
-          <button
-            className="btn bg-green-500 text-white p-2 rounded-md"
-            onClick={handleSaveAttendance}
-            disabled={loading}
-          >
-            {loading ? 'Saving...' : 'Save Attendance'}
-          </button>
-        </div>
-      )}
     </div>
   );
 };

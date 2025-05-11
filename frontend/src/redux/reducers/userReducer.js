@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  isAuthenticated: !!localStorage.getItem('accessToken'),
-  token: localStorage.getItem('accessToken'),
-  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
+  isAuthenticated: !!localStorage.getItem('authorization'),
+  token: localStorage.getItem('authorization'),
+  user: localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user'))
+    : null,
 };
 
 const userReducer = createSlice({
@@ -14,8 +16,9 @@ const userReducer = createSlice({
       state.isAuthenticated = true;
       state.token = action.payload.tokens.accessToken;
       state.user = action.payload.data;
-      localStorage.setItem('accessToken', action.payload.tokens.accessToken);
-      localStorage.setItem('refreshToken', action.payload.tokens.refreshToken);
+      // Bearer ${accessToken}
+      localStorage.setItem('authorization', `Bearer ${action.payload.tokens.accessToken}`);
+      localStorage.setItem('refresh-token', `Bearer ${action.payload.tokens.refreshToken}`);
       localStorage.setItem('user', JSON.stringify(action.payload.data));
     },
 
@@ -35,8 +38,8 @@ const userReducer = createSlice({
       state.isAuthenticated = true;
       state.token = action.payload.tokens.accessToken;
       state.user = action.payload.data;
-      localStorage.setItem('accessToken', action.payload.tokens.accessToken);
-      localStorage.setItem('refreshToken', action.payload.tokens.refreshToken);
+      localStorage.setItem('authorization', `Bearer ${action.payload.tokens.accessToken}`);
+      localStorage.setItem('refresh-token', `Bearer ${action.payload.tokens.refreshToken}`);
       localStorage.setItem('user', JSON.stringify(action.payload.data));
     },
   },

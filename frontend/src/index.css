@@ -3,3 +3,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  /* Make sure the indicator is fully opaque */
+  opacity: 1;
+  /* Invert the light default so it becomes dark */
+  filter: invert(0) drop-shadow(0 0 0 #1f2937);
+}

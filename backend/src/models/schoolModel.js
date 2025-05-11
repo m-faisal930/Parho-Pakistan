@@ -9,7 +9,7 @@ const SchoolSchema = new mongoose.Schema(
       enum: ['private', 'public', 'Semi Public'],
       required: true,
     },
-    address: { type: String, required: true },
+    city: { type: String, required: true },
     contactNo: { type: String, required: true },
     website: { type: String },
     principalName: { type: String, required: true },
@@ -25,12 +25,19 @@ const SchoolSchema = new mongoose.Schema(
     studentTeacherRatio: { type: String },
     tuitionAndFees: { type: String },
     additionalFacilities: { type: String },
-    transportAvailability: { type: Boolean },
+    transportAvailability: { type: String },
     scholarshipsOrFinancialAssistance: { type: String },
+    registrationCert: { type: String, required: false },
+    accreditationDocs: { type: String, required: false },
+    principalIdProof: { type: String, required: false },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+    },
   },
-  
+
   { timestamps: true }
-  
 );
 // Ensure unique email at the database level
 SchoolSchema.index({ email: 1 }, { unique: true });

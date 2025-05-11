@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 const SchoolCard = ({ schoolInfo }) => {
   return (
     <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <img
+      {/* <img
         src={
           'https://static.vecteezy.com/system/resources/thumbnails/008/040/410/small_2x/school-logo-design-template-free-vector.jpg'
         }
         alt={schoolInfo.name}
         className="w-16 h-16 mb-3 rounded-full border border-gray-300 dark:border-gray-600 mx-auto"
-      />
+      /> */}
       <a href="#">
         <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
           {schoolInfo.name}

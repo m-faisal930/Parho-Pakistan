@@ -11,32 +11,49 @@ import { ThemeContext } from '../context/ThemeContext';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { toast, Bounce } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logout } from '../redux/actions/userAction';
+// import { useDispatch } from 'react-redux';
+import {useAuth} from "../context/AuthContext";
+// import { logout } from '../redux/actions/userAction';
 
 
 export default function NavBar() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const [scrolled, setScrolled] = useState(false);
-    const dispatch = useDispatch();
+  const { isLoggedIn, logout } = useAuth();
+    // const dispatch = useDispatch();
     const navigate = useNavigate();
+        const handleLogout = () => {
+          logout();
+                toast.success(' Logout Successfully!', {
+                  position: 'top-center',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: false,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'light',
+                  transition: Bounce,
+                });
+          navigate('/login');
+        };
 
 
-    const handleLogout = () => {
-      dispatch(logout()); // Call the logout action
-      toast.success(' Logout Successfully!', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      });
-      navigate('/login'); // Redirect to login page
-    };
+    // const handleLogout = () => {
+    //   dispatch(logout()); // Call the logout action
+    //   toast.success(' Logout Successfully!', {
+    //     position: 'top-center',
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: false,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: 'light',
+    //     transition: Bounce,
+    //   });
+    //   navigate('/login'); // Redirect to login page
+    // };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +64,8 @@ export default function NavBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const { isAuthenticated } = useSelector((state) => state.user);
+  // const { isAuthenticated } = useSelector((state) => state.user);
+  const isAuthenticated = isLoggedIn; // Replace with your authentication logic
   return (
     <div
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${

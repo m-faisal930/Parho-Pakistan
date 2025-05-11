@@ -38,7 +38,7 @@ const Dashboard = () => {
     },
     {
       title: 'Monthly Sponsorship Collected',
-      value: '$15,000',
+      value: 'Rs. 15,000',
       icon: <FaMoneyBillWave className="text-purple-500" />,
     },
     {
@@ -156,7 +156,7 @@ const Dashboard = () => {
       </div>
 
       {/* Sticky Quick Actions - Responsive Design */}
-      <div className="sticky bottom-0 bg-white p-3 shadow-md flex flex-wrap justify-center gap-2 sm:gap-4">
+      {/* <div className="sticky bottom-0 bg-white p-3 shadow-md flex flex-wrap justify-center gap-2 sm:gap-4">
         {quickActions.map((action, index) => (
           <button
             key={index}
@@ -166,9 +166,14 @@ const Dashboard = () => {
             {action.label}
           </button>
         ))}
-      </div>
+      </div> */}
+
+
+
+      
     </div>
   );
 };
 
 export default Dashboard;
+

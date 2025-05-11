@@ -1,5 +1,6 @@
 // controllers/userController.js
 const userService = require('../services/userService');
+const User = require('../models/userModel'); // Import the User model
 
 // Create User
 const createUser = async (req, res) => {
@@ -14,6 +15,16 @@ const createUser = async (req, res) => {
     res.sendResponse(500, false, error.message);
   }
 };
+
+// Get User Count
+const getUserCount = async (req, res) => {
+    try {
+      const totalDonors = await User.countDocuments();
+      res.status(200).json({ totalDonors });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 
 // Get All Users
 const getAllUsers = async (req, res) => {
@@ -71,10 +82,16 @@ const deleteUser = async (req, res) => {
   }
 };
 
+
+
+
+
+
 module.exports = {
   createUser,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
+  getUserCount,
 };

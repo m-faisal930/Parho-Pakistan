@@ -5,12 +5,12 @@ const Joi = require('joi');
 const schoolValidationSchema = Joi.object({
   schoolName: Joi.string().trim().min(3).max(100).required(),
   email: Joi.string().trim().email().required(),
-  address: Joi.string().trim().min(5).required(),
+  city: Joi.string().trim().required(),
   contactNo: Joi.string()
-    .pattern(/^\d{10}$/)
+    .pattern(/^\d{11}$/)
     .required()
     .messages({
-      'string.pattern.base': 'Contact number must be a 10-digit number',
+      'string.pattern.base': 'Contact number must be a 11-digit number',
     }),
   schoolType: Joi.string().valid('private', 'public', 'semi public').required(),
   website: Joi.string().uri().optional().allow(''),
@@ -25,12 +25,16 @@ const schoolValidationSchema = Joi.object({
   studentTeacherRatio: Joi.string().trim().optional(),
   tuitionAndFees: Joi.string().trim().optional(),
   additionalFacilities: Joi.string().trim().optional(),
-  transportAvailability: Joi.boolean().required(),
-  scholarshipsOrFinancialAssistance: Joi.boolean().required(),
+  transportAvailability: Joi.string().trim().required(),
+  scholarshipsOrFinancialAssistance: Joi.string().trim().optional(),
+  registrationCert: Joi.string().trim().optional(),
+  accreditationDocs: Joi.string().trim().optional(),
+  principalIdProof: Joi.string().trim().optional(),
 });
 
 // 🎯 Add a new school
 exports.addSchool = async (req, res) => {
+  console.log(req.body); // Log the request body for debugging
   try {
     // ✅ Validate request data
     const { error } = schoolValidationSchema.validate(req.body);
@@ -107,13 +111,13 @@ exports.getSchoolById = async (req, res) => {
 exports.updateSchool = async (req, res) => {
   try {
     // ✅ Validate updated data
-    const { error } = schoolValidationSchema.validate(req.body, {
-      allowUnknown: true,
-    });
-    if (error)
-      return res
-        .status(400)
-        .json({ success: false, message: error.details[0].message });
+    // const { error } = schoolValidationSchema.validate(req.body, {
+    //   allowUnknown: true,
+    // });
+    // if (error)
+    //   return res
+    //     .status(400)
+    //     .json({ success: false, message: error.details[0].message });
 
     // ✅ Check if school exists
     const existingSchool = await School.findById(req.params.id);

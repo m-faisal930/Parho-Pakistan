@@ -9,6 +9,7 @@ exports.addCase = async (req, res) => {
       interests,
       hobbies,
       studentId,
+      schoolId,
       donationBreakdown,
       tags,
       status,
@@ -38,6 +39,7 @@ exports.addCase = async (req, res) => {
       interests,
       hobbies,
       studentId,
+      schoolId,
       donationBreakdown,
       tags,
       status,
@@ -104,6 +106,16 @@ exports.deleteCase = async (req, res) => {
     res
       .status(200)
       .json({ success: true, message: 'Case deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Get all cases
+exports.getAllCases = async (req, res) => {
+  try {
+    const cases = await Case.find();
+    res.status(200).json({ success: true, cases });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

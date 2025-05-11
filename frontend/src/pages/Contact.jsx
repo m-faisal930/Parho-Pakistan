@@ -115,7 +115,7 @@ export default function Contact() {
                         Our Address
                       </h3>
                       <p style={{ color: colors.textDark }}>
-                        1230 Maecenas Street, Islamabad, Pakistan
+                        30 KM Talakang Road, Namal University Mianwali
                       </p>
                       <p style={{ color: colors.textDark }}>Pakistan</p>
                     </div>

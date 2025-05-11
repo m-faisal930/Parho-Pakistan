@@ -19,8 +19,8 @@ const signUp = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const { accessToken, refreshToken, userData } = await authService.loginUser(email, password);
-    res.sendResponse(200, true, 'Login successful', userData, { accessToken, refreshToken });
+    const { token, userData } = await authService.loginUser(email, password);
+    res.sendResponse(200, true, 'Login successful', userData, { token });
   } catch (error) {
     res.sendResponse(400, false, error.message || 'Login failed');
   }

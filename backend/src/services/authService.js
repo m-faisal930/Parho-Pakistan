@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
 const userService = require('../services/userService')
-const { generateAccessToken, generateRefreshToken } = require('../utils/jwtUtil');
+// const { generateAccessToken, generateRefreshToken } = require('../utils/jwtUtil');
+const  jwt = require('jsonwebtoken');
 
 exports.createUser = async (data) => {
   try {
@@ -72,18 +73,28 @@ exports.loginUser = async (email, password) => {
       if (!isPasswordValid) {
         throw new Error('Invalid password');
       }
+  //       const token = jwt.sign(
+  //   { id: user._id, role: user.role },
+  //   process.env.JWT_SECRET,
+  //   { expiresIn: '4h' }
+  // );
   
-      // Generate tokens
-      const accessToken = generateAccessToken(user);
-      const refreshToken = generateRefreshToken(user);
+      // // Generate tokens
+      // const accessToken = generateAccessToken(user);
+      // const refreshToken = generateRefreshToken(user);
+        const role = user.role; 
+        const token = jwt.sign(
+          { id: user._id, role },
+          process.env.ACCESS_TOKEN_SECRET,
+          { expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '1h' }
+        );
   
       // Destructure sensitive or unnecessary fields
       const { password: hashedPassword, otp,status, createdAt, updatedAt, __v, ...safeUser } = user._doc;
   
       // Return tokens and sanitized user data
       return {
-        accessToken,
-        refreshToken,
+        token,
         userData: safeUser
       };
   

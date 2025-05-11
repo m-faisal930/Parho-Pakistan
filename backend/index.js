@@ -9,6 +9,10 @@ const studentRoutes = require('./src/routes/studentRoutes.js');
 const donorRoutes = require('./src/routes/donorRoutes.js');
 const schoolRoutes = require('./src/routes/schoolRoutes.js');
 const caseRoutes = require('./src/routes/caseRoutes.js')
+const attendanceRoutes = require('./src/routes/attendanceRoutes.js')
+const academicPerformanceRoutes = require('./src/routes/academicPerformanceRoutes.js');
+
+
 
 const cors = require('./src/middlewares/cors.js');
 const logger = require('./src/middlewares/logger.js');
@@ -25,38 +29,18 @@ app.use(logger);
 app.use(responseHandler);
 app.use(cors)
 
-
-
-
-
-app.use('/protected', authenticateToken);
+// app.use('/protected', authenticateToken);
 app.use('/auth',  authRoutes);
-
-
-app.use('/protected/student', studentRoutes);
-app.use('/protected/school', schoolRoutes);
-app.use('/protected/donors', donorRoutes);
-app.use('/protected/case', caseRoutes);
-
-
-
-app.use('/protected/users', userRoutes);
+app.use('/student', studentRoutes);
+app.use('/school', schoolRoutes);
+app.use('/donors', donorRoutes);
+app.use('/case', caseRoutes);
+app.use('/academic-performance', academicPerformanceRoutes);
+app.use('/users', userRoutes);
+app.use('/attendance', attendanceRoutes);
 
 
 const port = process.env.PORT || 3000;
-
-// Socket.io Connection and Event Handling
-// io.on('connection', (socket) => {
-//   console.log('A user connected:', socket.id);
-
-//   socket.on('chat message', (data) => {
-//     io.emit('chat message', data);
-//   });
-
-//   socket.on('disconnect', () => {
-//     console.log('User disconnected:', socket.id);
-//   });
-// });
 
 app.listen(port, () => {
   dbConnect();

@@ -16,6 +16,11 @@ const caseSchema = new mongoose.Schema(
       ref: 'Student',
       required: true,
     },
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: true,
+    },
     donationBreakdown: { type: Map, of: Number, required: true },
     tags: { type: [String], default: [] },
     status: {

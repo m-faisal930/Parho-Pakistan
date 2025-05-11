@@ -10,17 +10,20 @@ import AiAssistant from '../components/AiAssistant'
 import ChatbotIcon from '../components/ChatbotIcon'
 
 
+
 export default function Dashboard() {
+  
+  
   return (
     <div>
       <NavBar />
       <Hero />
-      <Suggestions Heading={'Find the Popular Cases and Donate Them'} />
+      <Suggestions Heading={'Change a Life, See the Impact'} />
       <NavbarWithScroll />
       <StatsCounter />
       {/* <AiAssistant /> */}
-<ChatbotIcon />
-<BackToTopButton />
+      <ChatbotIcon />
+      <BackToTopButton />
       <Footer />
     </div>
   );

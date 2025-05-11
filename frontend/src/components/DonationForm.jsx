@@ -38,7 +38,7 @@ const DonationForm = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-2 mb-4">
-        {[35, 50, 75, 125].map((amt) => (
+        {[2000, 4000, 6000, 8000].map((amt) => (
           <button
             key={amt}
             className={`px-4 py-2 ${
@@ -48,7 +48,7 @@ const DonationForm = () => {
             } rounded-md`}
             onClick={() => setAmount(amt)}
           >
-            ${amt}
+            Rs. {amt}
           </button>
         ))}
         <button

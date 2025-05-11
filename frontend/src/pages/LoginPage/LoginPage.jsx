@@ -1,13 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
+import { useEffect } from 'react';
 import PasswordInput from '../../elements/passwordInput/PasswordInput';
 import { useDispatch } from 'react-redux';
-import { login } from '../../redux/actions/userAction';
+import { useAuth } from '../../context/AuthContext';
+
+
+// import { login } from '../../redux/actions/userAction';
 
 function LoginPage() {
     const navigate = useNavigate();
-  const dispatch = useDispatch();
+      const { login, isLoggedIn } = useAuth();
+      // const navigate = useNavigate();
+
+      // Redirect if already logged in
+      useEffect(() => {
+        if (isLoggedIn) navigate('/', { replace: true });
+      }, [isLoggedIn, navigate]);
+  // const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -43,8 +54,11 @@ function LoginPage() {
     setError(null);
 
     try {
+        
+            await login(email, password);
+            navigate('/', { replace: true });
       
-      await dispatch(login(data));
+      // await dispatch(login(data));
       // navigate('/dashboard');
     } catch (err) {
       setError('Invalid credentials, please try again.');

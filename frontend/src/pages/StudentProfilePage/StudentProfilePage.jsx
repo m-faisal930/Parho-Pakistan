@@ -23,7 +23,6 @@ const StudentProfilePage = () => {
     { id: 'basicInfo', label: 'Basic Info' },
     { id: 'academicPerformance', label: 'Academic Performance' },
     { id: 'achievements', label: 'Achievements' },
-    { id: 'photoGallery', label: 'Photo Gallery' },
     { id: 'donorComments', label: 'Donor Comments' },
   ];
 
@@ -215,17 +214,7 @@ const StudentProfilePage = () => {
             </div>
           </section>
 
-          {/* Photo Gallery Section */}
-          <section
-            id="photoGallery"
-            className="min-h-screen bg-white p-6 rounded-xl shadow-md"
-          >
-            <h3 className="text-2xl font-bold mb-4 text-[#3431BB]">
-              Photo Gallery
-            </h3>
-            {/* <p>Photo gallery content goes here...</p> */}
-            <ImagesGallery />
-          </section>
+
 
           {/* Donor Comments Section */}
           <section

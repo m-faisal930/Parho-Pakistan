@@ -1,11 +1,14 @@
 const express = require('express');
+const { check } = require('express-validator');
 const {
   getAllStudents,
   addStudent,
   updateStudent,
   deleteStudent,
+  getStudentById,
 } = require('../controllers/studentController/studentController');
 const router = express.Router();
+const Student = require('../models/studentModel');
 
 // router.get(
 //   '/profile/:studentId',
@@ -21,7 +24,6 @@ const router = express.Router();
 
 
 
-const { check } = require('express-validator');
 
 router.post(
   '/',
@@ -56,6 +58,10 @@ router.post(
   addStudent
 );
 
+// Route to get student profile by ID
+router.get('/profile/:studentId', getStudentById);
+
+
 
 
 
@@ -73,5 +79,25 @@ router.put("/update/:id", updateStudent);
 
 // Route to delete a student by ID
 router.delete("/delete/:id", deleteStudent);
+
+// Find total number of students
+router.get("/total", async (req, res) => {
+  try {
+    const totalStudents = await Student.countDocuments();
+    res.status(200).json({ totalStudents });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Find total number of students with sponsership true
+router.get("/total-sponsored", async (req, res) => {
+  try {
+    const totalSponsoredStudents = await Student.countDocuments({ sponsership: true });
+    res.status(200).json({ totalSponsoredStudents });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 module.exports = router;

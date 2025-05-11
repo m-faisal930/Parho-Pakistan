@@ -139,12 +139,26 @@ const FeeManagement = () => {
                     </span>
                   </td>
                   <td className="p-2">
-                    <button
-                      onClick={handleManualEntry}
-                      className="bg-yellow-500 text-white py-1 px-3 rounded-lg mr-2 hover:bg-yellow-600"
+                    {student.status === 'Pending' && (
+                                          <button
+                      className="bg-blue-500 text-white py-1 px-3 rounded-lg mr-2 hover:bg-yellow-600"
                     >
-                      Edit
+                      Notify Donor
                     </button>
+                    )
+                      }
+
+                      {
+                        student.status === 'Paid' && (
+                          <button
+                            disabled
+                            className="bg-blue-200 text-white py-1 px-3 mr-2 rounded-lg"
+                          >
+                            Notify Donor
+                          </button>
+                        )
+                      }
+
                     <button
                       onClick={handleManualEntry}
                       className="bg-blue-500 text-white py-1 px-3 rounded-lg hover:bg-blue-600"

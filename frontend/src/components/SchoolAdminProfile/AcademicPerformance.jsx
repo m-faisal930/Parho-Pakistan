@@ -1,268 +1,637 @@
 import React, { useState, useEffect } from 'react';
-import { FaSave, FaFileCsv, FaFilePdf } from 'react-icons/fa';
+import {
+  FaUser,
+  FaSearch,
+  FaCalendarAlt,
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaChartLine,
+  FaTimes,
+  FaCheck,
+} from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const AcademicPerformance = () => {
-  const [studentsData, setStudentsData] = useState([
-    { id: 1, name: 'John Doe', class: '10A', sponsorshipStatus: 'Active' },
-    { id: 2, name: 'Jane Smith', class: '9B', sponsorshipStatus: 'Inactive' },
-    { id: 3, name: 'Alex Johnson', class: '11C', sponsorshipStatus: 'Active' },
-    { id: 4, name: 'Michael Lee', class: '10A', sponsorshipStatus: 'Inactive' },
-    { id: 5, name: 'Sara Davis', class: '11C', sponsorshipStatus: 'Active' },
-  ]);
+const AcademicPerformance = ({ school_id }) => {
+  const [students, setStudents] = useState([]);
+  const [performanceRecords, setPerformanceRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0]
+  );
+  const [viewMode, setViewMode] = useState('add');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [schoolId] = useState(school_id);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState(null);
+  const [formData, setFormData] = useState({
+    studentId: '',
+    assessmentType: 'class_test',
+    subject: '',
+    marks: '',
+    date: new Date().toISOString().split('T')[0],
+    comments: '',
+  });
 
-  const [filteredStudents, setFilteredStudents] = useState(studentsData);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [marksCategory, setMarksCategory] = useState('quiz');
-  const [marksType, setMarksType] = useState('obtained');
-  const [totalMarks, setTotalMarks] = useState('');
-  const [obtainedMarks, setObtainedMarks] = useState('');
-  const [loading, setLoading] = useState(false);
+  const assessmentTypes = [
+    { value: 'class_test', label: 'Class Test' },
+    { value: 'monthly_test', label: 'Monthly Test' },
+    { value: 'term_exam', label: 'Term Exam' },
+    { value: 'annual_exam', label: 'Annual Exam' },
+    { value: 'project', label: 'Project' },
+  ];
 
-  // Filter states
-  const [searchName, setSearchName] = useState('');
-  const [selectedClass, setSelectedClass] = useState('');
-  const [selectedSponsorshipStatus, setSelectedSponsorshipStatus] =
-    useState('');
-
-  // Handle filtering students
-  const filterStudents = () => {
-    let filtered = studentsData;
-
-    // Search filter
-    if (searchName) {
-      filtered = filtered.filter((student) =>
-        student.name.toLowerCase().includes(searchName.toLowerCase())
-      );
-    }
-
-    // Class filter
-    if (selectedClass) {
-      filtered = filtered.filter((student) => student.class === selectedClass);
-    }
-
-    // Sponsorship filter
-    if (selectedSponsorshipStatus) {
-      filtered = filtered.filter(
-        (student) => student.sponsorshipStatus === selectedSponsorshipStatus
-      );
-    }
-
-    setFilteredStudents(filtered);
-  };
-
-  // Trigger filter logic when any filter state changes
+  // Fetch students and performance data
   useEffect(() => {
-    filterStudents();
-  }, [searchName, selectedClass, selectedSponsorshipStatus]);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  // Handle selecting a student
-  const handleSelectStudent = (student) => {
-    setSelectedStudent(student);
-    setMarksCategory('quiz');
-    setMarksType('obtained');
-    setTotalMarks('');
-    setObtainedMarks('');
-  };
+        // Fetch students
+        const studentsRes = await fetch(
+          `http://localhost:3000/attendance/students?schoolId=${schoolId}`
+        );
+        const studentsData = await studentsRes.json();
+        if (!studentsRes.ok) throw new Error(studentsData.message);
 
-  // Save academic data for selected student
-  const handleSaveAcademicData = () => {
-    if (!selectedStudent) return alert('Please select a student first.');
-    if (
-      marksType === 'obtained' &&
-      Number(obtainedMarks) > Number(totalMarks)
-    ) {
-      return alert('Obtained marks cannot exceed total marks.');
-    }
+        // Fetch performance records
+        const performanceRes = await fetch(
+          `http://localhost:3000/academic-performance/${schoolId}?fromDate=${selectedDate}`
+        );
+        const performanceData = await performanceRes.json();
+        if (!performanceRes.ok) throw new Error(performanceData.message);
 
-    const updatedData = {
-      ...selectedStudent,
-      [marksCategory]: {
-        totalMarks: totalMarks,
-        obtainedMarks: obtainedMarks,
-      },
+        setStudents(studentsData.data);
+        setPerformanceRecords(performanceData.data);
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    // Simulating saving data
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      alert(`Academic data saved for ${selectedStudent.name}`);
-    }, 1000);
+    fetchData();
+  }, [selectedDate, schoolId]);
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  // Render students list
-  const renderStudentsList = () => {
+  // Submit performance record
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        'http://localhost:3000/academic-performance',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            schoolId,
+            ...formData,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message);
+
+      setPerformanceRecords([data.data, ...performanceRecords]);
+      toast.success('Performance record added successfully');
+      setIsModalOpen(false);
+      resetForm();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  // Update performance record
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `http://localhost:3000/academic-performance/${currentRecord._id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            assessmentType: formData.assessmentType,
+            subject: formData.subject,
+            marks: formData.marks,
+            date: formData.date,
+            comments: formData.comments,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message);
+
+      setPerformanceRecords(
+        performanceRecords.map((record) =>
+          record._id === currentRecord._id ? data.data : record
+        )
+      );
+      toast.success('Performance record updated successfully');
+      setIsModalOpen(false);
+      resetForm();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  // Delete performance record
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this record?')) {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/academic-performance/${id}`,
+          {
+            method: 'DELETE',
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data.message);
+
+        setPerformanceRecords(
+          performanceRecords.filter((record) => record._id !== id)
+        );
+        toast.success('Performance record deleted successfully');
+      } catch (error) {
+        toast.error(error.message);
+      }
+    }
+  };
+
+  // Open edit modal
+  const openEditModal = (record) => {
+    setCurrentRecord(record);
+    setFormData({
+      studentId: record.student._id,
+      assessmentType: record.assessmentType,
+      subject: record.subject,
+      marks: record.marks,
+      date: new Date(record.date).toISOString().split('T')[0],
+      comments: record.comments || '',
+    });
+    setIsModalOpen(true);
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setFormData({
+      studentId: '',
+      assessmentType: 'class_test',
+      subject: '',
+      marks: '',
+      date: new Date().toISOString().split('T')[0],
+      comments: '',
+    });
+    setCurrentRecord(null);
+  };
+
+  // Filter students based on search
+  const filteredStudents = students.filter((student) =>
+    student.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Filter records based on search
+  const filteredRecords = performanceRecords.filter((record) =>
+    record.student.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
     return (
-      <div className="overflow-x-auto mb-6">
-        <table className="min-w-full table-auto">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-left">Name</th>
-              <th className="px-4 py-2 text-left">Class</th>
-              <th className="px-4 py-2 text-left">Sponsorship Status</th>
-              <th className="px-4 py-2 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredStudents.map((student) => (
-              <tr key={student.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{student.name}</td>
-                <td className="px-4 py-2">{student.class}</td>
-                <td className="px-4 py-2">{student.sponsorshipStatus}</td>
-                <td className="px-4 py-2">
-                  <button
-                    onClick={() => handleSelectStudent(student)}
-                    className="bg-blue-500 text-white py-1 px-3 rounded-lg hover:bg-blue-600"
-                  >
-                    Select
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
-  };
+  }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-2xl font-semibold mb-4 text-center">
-          Academic Performance
-        </h2>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6">Academic Performance</h1>
 
-        {/* Filters Section */}
-        <div className="flex flex-wrap gap-4 mb-6">
-          <div className="w-full sm:w-auto">
-            <label className="block font-medium text-gray-700">
-              Search by Name
-            </label>
-            <input
-              type="text"
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
-              className="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter student name"
-            />
+        {/* Controls */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setViewMode('add')}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                viewMode === 'add' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+              }`}
+            >
+              <FaPlus /> Add Performance
+            </button>
+            <button
+              onClick={() => setViewMode('view')}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                viewMode === 'view' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+              }`}
+            >
+              <FaChartLine /> View Records
+            </button>
           </div>
 
-          <div className="w-full sm:w-auto">
-            <label className="block font-medium text-gray-700">
-              Select Class
-            </label>
-            <select
-              value={selectedClass}
-              onChange={(e) => setSelectedClass(e.target.value)}
-              className="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">All Classes</option>
-              <option value="10A">10A</option>
-              <option value="9B">9B</option>
-              <option value="11C">11C</option>
-            </select>
-          </div>
-
-          <div className="w-full sm:w-auto">
-            <label className="block font-medium text-gray-700">
-              Select Sponsorship Status
-            </label>
-            <select
-              value={selectedSponsorshipStatus}
-              onChange={(e) => setSelectedSponsorshipStatus(e.target.value)}
-              className="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">All Statuses</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <FaCalendarAlt className="absolute left-3 top-3 text-gray-400" />
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="relative">
+              <FaSearch className="absolute left-3 top-3 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search students..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Students List */}
-        <div className="mb-6">{renderStudentsList()}</div>
-
-        {/* If a student is selected, show the input forms */}
-        {selectedStudent && (
-          <div className="mt-6">
-            <h3 className="text-xl font-semibold mb-3">
-              Add Academic Data for {selectedStudent.name}
-            </h3>
-            <div className="space-y-4">
-              {/* Marks Category Dropdown */}
-              <div>
-                <label className="block font-medium text-gray-700">
-                  Select Marks Category
-                </label>
-                <select
-                  value={marksCategory}
-                  onChange={(e) => setMarksCategory(e.target.value)}
-                  className="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="quiz">Quiz</option>
-                  <option value="assignment">Assignment</option>
-                  <option value="exam">Exam</option>
-                  <option value="project">Project</option>
-                </select>
-              </div>
-
-              {/* Marks Type Dropdown */}
-              <div>
-                <label className="block font-medium text-gray-700">
-                  Select Marks Type
-                </label>
-                <select
-                  value={marksType}
-                  onChange={(e) => setMarksType(e.target.value)}
-                  className="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="obtained">Obtained Marks</option>
-                  <option value="total">Total Marks</option>
-                </select>
-              </div>
-
-              {/* Total Marks and Obtained Marks Input Fields */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-medium text-gray-700">
-                    Total Marks
-                  </label>
-                  <input
-                    type="number"
-                    value={totalMarks}
-                    onChange={(e) => setTotalMarks(e.target.value)}
-                    className="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter total marks"
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium text-gray-700">
-                    Obtained Marks
-                  </label>
-                  <input
-                    type="number"
-                    value={obtainedMarks}
-                    onChange={(e) => setObtainedMarks(e.target.value)}
-                    className="mt-2 p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter obtained marks"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-center gap-4 mt-6">
+        {/* Add Performance View */}
+        {viewMode === 'add' && (
+          <div className="bg-white rounded-lg shadow-md overflow-hidden p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">
+                Add Academic Performance
+              </h2>
               <button
-                onClick={handleSaveAcademicData}
-                className="bg-blue-500 text-white py-2 px-6 rounded-lg flex items-center hover:bg-blue-600"
-                disabled={loading}
+                onClick={() => setIsModalOpen(true)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center gap-2 hover:bg-blue-700"
               >
-                {loading ? (
-                  'Saving...'
-                ) : (
-                  <>
-                    <FaSave className="mr-2" /> Save
-                  </>
-                )}
+                <FaPlus /> Add New Record
               </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Student
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Grade
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredStudents.length > 0 ? (
+                    filteredStudents.map((student) => (
+                      <tr key={student._id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                              {student.profilePicture ? (
+                                <img
+                                  src={student.profilePicture}
+                                  alt={student.fullName}
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                <FaUser className="text-gray-400" />
+                              )}
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {student.fullName}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {student.currentGrade}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <button
+                            onClick={() => {
+                              setFormData({
+                                ...formData,
+                                studentId: student._id,
+                              });
+                              setIsModalOpen(true);
+                            }}
+                            className="px-3 py-1 bg-blue-100 text-blue-800 rounded-md flex items-center gap-1 hover:bg-blue-200"
+                          >
+                            <FaPlus /> Add Record
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="3"
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
+                        No students found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* View Records */}
+        {viewMode === 'view' && (
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Student
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Assessment
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Subject
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Marks
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredRecords.length > 0 ? (
+                    filteredRecords.map((record) => (
+                      <tr key={record._id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {new Date(record.date).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                              {record.student.profilePicture ? (
+                                <img
+                                  src={record.student.profilePicture}
+                                  alt={record.student.fullName}
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                <FaUser className="text-gray-400" />
+                              )}
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {record.student.fullName}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {record.student.currentGrade}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {assessmentTypes.find(
+                              (type) => type.value === record.assessmentType
+                            )?.label || record.assessmentType}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {record.subject}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div
+                            className={`text-sm font-semibold ${
+                              record.marks >= 80
+                                ? 'text-green-600'
+                                : record.marks >= 50
+                                ? 'text-yellow-600'
+                                : 'text-red-600'
+                            }`}
+                          >
+                            {record.marks}%
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => openEditModal(record)}
+                              className="p-2 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200"
+                              title="Edit"
+                            >
+                              <FaEdit />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(record._id)}
+                              className="p-2 bg-red-100 text-red-800 rounded-md hover:bg-red-200"
+                              title="Delete"
+                            >
+                              <FaTrash />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="6"
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
+                        No performance records found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Add/Edit Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-auto mt-50">
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+              <div className="p-6">
+                <div className="flex justify-between items-center border-b pb-4 mb-4">
+                  <h3 className="text-xl font-semibold">
+                    {currentRecord
+                      ? 'Edit Performance Record'
+                      : 'Add Performance Record'}
+                  </h3>
+                  <button
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      resetForm();
+                    }}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <FaTimes className="text-xl" />
+                  </button>
+                </div>
+
+                <form
+                  onSubmit={currentRecord ? handleUpdate : handleSubmit}
+                  className="space-y-4"
+                >
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">Student</label>
+                    {currentRecord ? (
+                      <div className="p-2 bg-gray-100 rounded">
+                        {currentRecord.student.fullName}
+                      </div>
+                    ) : (
+                      <select
+                        name="studentId"
+                        value={formData.studentId}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required
+                      >
+                        <option value="">Select Student</option>
+                        {students.map((student) => (
+                          <option key={student._id} value={student._id}>
+                            {student.fullName} ({student.currentGrade})
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">
+                      Assessment Type
+                    </label>
+                    <select
+                      name="assessmentType"
+                      value={formData.assessmentType}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    >
+                      {assessmentTypes.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">Subject</label>
+                    <input
+                      type="text"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">
+                      Marks (%)
+                    </label>
+                    <input
+                      type="number"
+                      name="marks"
+                      value={formData.marks}
+                      onChange={handleInputChange}
+                      min="0"
+                      max="100"
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">Date</label>
+                    <input
+                      type="date"
+                      name="date"
+                      value={formData.date}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">
+                      Comments (Optional)
+                    </label>
+                    <textarea
+                      name="comments"
+                      value={formData.comments}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      rows="3"
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsModalOpen(false);
+                        resetForm();
+                      }}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center gap-2"
+                    >
+                      <FaTimes /> Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                    >
+                      {currentRecord ? (
+                        <>
+                          <FaEdit /> Update
+                        </>
+                      ) : (
+                        <>
+                          <FaCheck /> Submit
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         )}

@@ -21,7 +21,7 @@ export default function StudentAdminProfile() {
       case 'Profile':
         return <Profile />;
       default:
-        return <Home />;
+        return <Dashboard />;
     }
   };
 

@@ -9,11 +9,13 @@ import AttendanceManagement from '../../components/SchoolAdminProfile/Attendance
 import FeeManagement from '../../components/SchoolAdminProfile/FeeManagement';
 import StudentsManagement from '../../components/SchoolAdminProfile/StudentsManagement';
 import AcademicPerformance from '../../components/SchoolAdminProfile/AcademicPerformance';
+import { useParams } from 'react-router-dom';
 
 export default function SchoolAdminProfile() {
   const [activeTab, setActiveTab] = useState('Home');
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
+  const { id } = useParams();
 
   const renderComponent = () => {
     switch (activeTab) {
@@ -22,22 +24,24 @@ export default function SchoolAdminProfile() {
       case 'Sponserships':
         return <SponsorshipsDonors />;
       case 'Attendance Record':
-        return <AttendanceManagement />;
+        return <AttendanceManagement school_id={id} />;
       case 'Fee Management':
         return <FeeManagement />;
       case 'Students Management':
         return <StudentsManagement />;
       case 'Grade Management':
-        return <AcademicPerformance />;
+        return <AcademicPerformance school_id={id} />;
       case 'Profile':
-        return <Profile />;
-      default:
+        return <Profile id={id} />;
+      case 'Home':
         return <Home />;
+      default:
+        return <Dashboard />;
     }
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen font-work">
       {/* Sidebar */}
       <div className={`${isOpen ? 'block' : 'hidden'} lg:block`}>
         <Sidebar
@@ -50,7 +54,7 @@ export default function SchoolAdminProfile() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         <Navbar toggleSidebar={toggleSidebar} />
-        <div className="flex-1 overflow-auto p-5 bg-gray-100">
+        <div className="flex-1 overflow-auto p-5 bg-light text-dark">
           {renderComponent()}
         </div>
       </div>

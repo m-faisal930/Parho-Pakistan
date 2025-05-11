@@ -38,7 +38,7 @@ const SponsorshipsDonors = () => {
   ]);
 
   const [pendingSponsorships, setPendingSponsorships] = useState(5);
-  const [unallocatedFunds, setUnallocatedFunds] = useState(2000);
+
 
   const [sponsorshipRequests, setSponsorshipRequests] = useState([
     { studentName: 'Emma White', requestedAmount: 500, status: 'Pending' },
@@ -77,9 +77,6 @@ const SponsorshipsDonors = () => {
     setSponsorshipRequests(updatedRequests);
   };
 
-  const handleAssignDonor = (studentName, donorName) => {
-    alert(`Assigned ${donorName} to sponsor ${studentName}`);
-  };
 
   const handleGenerateReport = (type) => {
     setLoadingReport(true);
@@ -94,7 +91,7 @@ const SponsorshipsDonors = () => {
       <h2 className="text-2xl font-bold mb-6">Sponsorship & Donors</h2>
 
       {/* Sponsorship Summary */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="bg-white p-6 rounded-lg shadow-md mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col items-center">
           <FaDollarSign className="text-green-500 text-3xl mb-2" />
           <h3 className="text-lg font-semibold">Total Sponsored Students</h3>
@@ -107,45 +104,7 @@ const SponsorshipsDonors = () => {
           </h3>
           <p className="text-xl">{pendingSponsorships}</p>
         </div>
-        <div className="flex flex-col items-center">
-          <FaDollarSign className="text-blue-500 text-3xl mb-2" />
-          <h3 className="text-lg font-semibold">Unallocated Funds</h3>
-          <p className="text-xl">${unallocatedFunds}</p>
-        </div>
-      </div>
 
-      {/* Donor List Table */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h3 className="text-lg font-semibold mb-4">Donor List</h3>
-        <table className="min-w-full table-auto border-collapse">
-          <thead>
-            <tr className="border-b">
-              <th className="p-2 text-left">Donor Name</th>
-              <th className="p-2 text-left">Contact</th>
-              <th className="p-2 text-left">Contribution Amount</th>
-              <th className="p-2 text-left">Sponsored Students</th>
-              <th className="p-2 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {donorsData.map((donor, index) => (
-              <tr key={index} className="border-b">
-                <td className="p-2">{donor.name}</td>
-                <td className="p-2">{donor.contact}</td>
-                <td className="p-2">${donor.contribution}</td>
-                <td className="p-2">{donor.sponsoredStudents}</td>
-                <td className="p-2">
-                  <button
-                    onClick={() => handleAssignDonor('John Doe', donor.name)}
-                    className="bg-blue-500 text-white py-1 px-3 rounded-lg hover:bg-blue-600"
-                  >
-                    Assign to Student
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
 
       {/* Student Sponsorship Requests */}
@@ -187,6 +146,37 @@ const SponsorshipsDonors = () => {
                   ) : (
                     <span className="text-gray-500">No Action</span>
                   )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Donor List Table */}
+      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h3 className="text-lg font-semibold mb-4">Donor List</h3>
+        <table className="min-w-full table-auto border-collapse">
+          <thead>
+            <tr className="border-b">
+              <th className="p-2 text-left">Donor Name</th>
+              <th className="p-2 text-left">Contact</th>
+              <th className="p-2 text-left">Contribution Amount</th>
+              <th className="p-2 text-left">Sponsored Students</th>
+              <th className="p-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {donorsData.map((donor, index) => (
+              <tr key={index} className="border-b">
+                <td className="p-2">{donor.name}</td>
+                <td className="p-2">{donor.contact}</td>
+                <td className="p-2">${donor.contribution}</td>
+                <td className="p-2">{donor.sponsoredStudents}</td>
+                <td className="p-2">
+                  <button className="bg-blue-500 text-white py-1 px-3 rounded-lg hover:bg-blue-600">
+                    Send Thanks Note!
+                  </button>
                 </td>
               </tr>
             ))}
