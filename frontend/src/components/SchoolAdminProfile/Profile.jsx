@@ -321,7 +321,9 @@ const Profile = ({ id }) => {
     const fetchSchoolData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`http://localhost:3000/school/${id}`);
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}school/${id}`
+        );
         const data = await response.json();
 
         if (data.success) {

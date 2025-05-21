@@ -33,13 +33,17 @@ const StudentManagement = () => {
         setLoading(true);
 
         // Fetch students
-        const studentsRes = await fetch('http://localhost:3000/student/all');
+        const studentsRes = await fetch(
+          `${import.meta.env.VITE_BASE_URL}student/all`
+        );
         const studentsData = await studentsRes.json();
         if (!studentsRes.ok)
           throw new Error(studentsData.message || 'Failed to fetch students');
 
         // Fetch schools
-        const schoolsRes = await fetch('http://localhost:3000/school/list');
+        const schoolsRes = await fetch(
+          `${import.meta.env.VITE_BASE_URL}school/list`
+        );
         const schoolsData = await schoolsRes.json();
         if (!schoolsRes.ok)
           throw new Error(schoolsData.message || 'Failed to fetch schools');
@@ -61,7 +65,7 @@ const StudentManagement = () => {
     try {
       setAssigningSchool(true);
       const response = await fetch(
-        `http://localhost:3000/student/update/${studentId}`,
+        `${import.meta.env.VITE_BASE_URL}student/update/${studentId}`,
         {
           method: 'PUT',
           headers: {

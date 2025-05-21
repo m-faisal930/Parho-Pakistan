@@ -239,7 +239,7 @@ const AddSchoolPage = () => {
       };
 
       const res = await axios.post(
-        'http://localhost:3000/school/add',
+        `${import.meta.env.VITE_BASE_URL}school/add`,
         submissionData,
         {
           headers: {

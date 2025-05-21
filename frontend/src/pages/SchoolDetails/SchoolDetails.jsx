@@ -45,7 +45,9 @@ const SchoolDetails = () => {
   useEffect(() => {
     const fetchSchool = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/school/${id}`);
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}school/${id}`
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch school details');
         }

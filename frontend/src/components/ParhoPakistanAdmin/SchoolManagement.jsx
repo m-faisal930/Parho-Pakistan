@@ -27,7 +27,9 @@ const SchoolManagement = () => {
   useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const response = await fetch('http://localhost:3000/school/list');
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}school/list`
+        );
         const data = await response.json();
         if (data.success) {
           setSchools(data.schools);
@@ -47,13 +49,16 @@ const SchoolManagement = () => {
   // Update school status
   const updateSchoolStatus = async (schoolId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:3000/school/update/${schoolId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}school/update/${schoolId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Update failed');
@@ -72,9 +77,12 @@ const SchoolManagement = () => {
     if (!window.confirm('Are you sure you want to delete this school?')) return;
     
     try {
-      const response = await fetch(`http://localhost:3000/school/delete/${schoolId}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}school/delete/${schoolId}`,
+        {
+          method: 'DELETE',
+        }
+      );
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Delete failed');

@@ -50,14 +50,18 @@ const AcademicPerformance = ({ school_id }) => {
 
         // Fetch students
         const studentsRes = await fetch(
-          `http://localhost:3000/attendance/students?schoolId=${schoolId}`
+          `${
+            import.meta.env.VITE_BASE_URL
+          }attendance/students?schoolId=${schoolId}`
         );
         const studentsData = await studentsRes.json();
         if (!studentsRes.ok) throw new Error(studentsData.message);
 
         // Fetch performance records
         const performanceRes = await fetch(
-          `http://localhost:3000/academic-performance/${schoolId}?fromDate=${selectedDate}`
+          `${
+            import.meta.env.VITE_BASE_URL
+          }academic-performance/${schoolId}?fromDate=${selectedDate}`
         );
         const performanceData = await performanceRes.json();
         if (!performanceRes.ok) throw new Error(performanceData.message);
@@ -88,7 +92,7 @@ const AcademicPerformance = ({ school_id }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        'http://localhost:3000/academic-performance',
+        `${import.meta.env.VITE_BASE_URL}academic-performance`,
         {
           method: 'POST',
           headers: {
@@ -119,7 +123,9 @@ const AcademicPerformance = ({ school_id }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:3000/academic-performance/${currentRecord._id}`,
+        `${import.meta.env.VITE_BASE_URL}academic-performance/${
+          currentRecord._id
+        }`,
         {
           method: 'PUT',
           headers: {
@@ -157,7 +163,7 @@ const AcademicPerformance = ({ school_id }) => {
     if (window.confirm('Are you sure you want to delete this record?')) {
       try {
         const response = await fetch(
-          `http://localhost:3000/academic-performance/${id}`,
+          `${import.meta.env.VITE_BASE_URL}academic-performance/${id}`,
           {
             method: 'DELETE',
           }

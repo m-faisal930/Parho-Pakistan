@@ -37,7 +37,9 @@ console.log(schoolId)
 
         // Fetch sponsored students
         const studentsRes = await fetch(
-          `http://localhost:3000/attendance/students?schoolId=${schoolId}`
+          `${
+            import.meta.env.VITE_BASE_URL
+          }attendance/students?schoolId=${schoolId}`
         );
         const studentsData = await studentsRes.json();
 
@@ -45,7 +47,9 @@ console.log(schoolId)
 
         // Fetch today's attendance records
         const attendanceRes = await fetch(
-          `http://localhost:3000/attendance?schoolId=${schoolId}&date=${selectedDate}`
+          `${
+            import.meta.env.VITE_BASE_URL
+          }attendance?schoolId=${schoolId}&date=${selectedDate}`
         );
         const attendanceData = await attendanceRes.json();
 

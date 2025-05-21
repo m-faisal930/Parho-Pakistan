@@ -186,10 +186,9 @@ const cities = [
 
       // Post to backend
       const res = await axios.post(
-        'http://localhost:3000/student',
+        `${import.meta.env.VITE_BASE_URL}student`,
         payload,
-        {
-  }
+        {}
       );
       // if (res.status === 200) {
             toast.success(' Student Added Successfully!', {

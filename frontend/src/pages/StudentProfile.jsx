@@ -52,7 +52,9 @@ const StudentProfilePage = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/student/profile/${id}`);
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}student/profile/${id}`
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch student details');
         }
