@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ToastContainer, Bounce } from 'react-toastify';
 import Dashboard from './pages/Dashboard';
-import About from './pages/about';
+import About from './pages/About';
 import Page404 from './pages/Page404';
 import Contact from './pages/Contact';
 import CaesPage from './pages/CaesPage';
