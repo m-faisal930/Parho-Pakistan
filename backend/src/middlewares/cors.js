@@ -1,9 +1,9 @@
 const cors = require('cors');
+const dotenv = require('dotenv');
+dotenv.config();
 
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://52.71.51.45'
-];
+
+const allowedOrigins = [process.env.VITE_BASE_URL, 'http://52.71.51.45'];
 
 const corsOptions = {
   origin: (origin, callback) => {
