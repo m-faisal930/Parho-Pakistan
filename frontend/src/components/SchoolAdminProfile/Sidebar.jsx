@@ -26,10 +26,8 @@ const Sidebar = ({ setActiveTab, isOpen, toggleSidebar }) => {
       <nav className="flex flex-col space-y-4">
         {[
           { name: 'Dashboard', icon: LayoutDashboard },
-          { name: 'Sponserships', icon: Handshake },
           { name: 'Profile', icon: User },
           { name: 'Attendance Record', icon: CheckSquare }, // Represents checking attendance
-          { name: 'Fee Management', icon: Wallet }, // Represents payments
           { name: 'Students Management', icon: Users }, // Represents managing multiple students
           { name: 'Grade Management', icon: BookOpenCheck }, // Represents grading and academic records
         ].map((tab) => (

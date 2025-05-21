@@ -79,7 +79,7 @@ Make sure you have the following installed:
 1. **Clone the Repository:**
    ```
    ```bash
-   git clone https://github.com/yourusername/parho-pakistan.git
+   git clone https://github.com/m-faisal930/parho-pakistan.git
    cd parho-pakistan
    ```
    

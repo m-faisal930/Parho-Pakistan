@@ -30,9 +30,7 @@ const Sidebar = ({ setActiveTab, isOpen, toggleSidebar }) => {
           { name: 'Dashboard', icon: LayoutDashboard },
           { name: 'Student Management', icon: Users },
           { name: 'School Management', icon: School },
-          { name: 'Donor Management', icon: Handshake },
           { name: 'Fund Management', icon: Wallet },
-          { name: 'Complaints', icon: AlertTriangle },
           { name: 'Settings', icon: Settings },
         ].map((tab) => (
           <button

@@ -123,8 +123,6 @@ const StudentProfilePage = () => {
 
   return (
     <div className="bg-light">
-
-
       <NavBar />
 
       {/* Back button */}
@@ -150,10 +148,10 @@ const StudentProfilePage = () => {
             {/* Student Photo */}
             <div className="md:w-1/3 bg-lightdiv flex items-center justify-center p-8">
               <div className="relative">
-                {dp ? (
+                {student.passportPhoto ? (
                   <img
-                    src={dp}
-                    alt={dp}
+                    src={student.passportPhoto}
+                    alt={student.passportPhoto}
                     className="w-64 h-64 rounded-full object-cover border-4 border-white shadow-lg"
                   />
                 ) : (

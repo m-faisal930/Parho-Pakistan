@@ -23,22 +23,22 @@ const Dashboard = () => {
   const stats = [
     {
       title: 'Total Donations',
-      value: '$50,000',
+      value: 'Rs.50,000',
       icon: <FaHandHoldingUsd className="text-green-500" />,
     },
     {
       title: 'Active Campaigns',
-      value: '12',
+      value: '3',
       icon: <FaChartLine className="text-blue-500" />,
     },
     {
       title: 'Donors Engaged',
-      value: '250',
+      value: '10',
       icon: <FaUsers className="text-yellow-500" />,
     },
     {
       title: 'Monthly Contributions',
-      value: '$10,000',
+      value: 'Rs.10,000',
       icon: <FaMoneyBillWave className="text-purple-500" />,
     },
     {
