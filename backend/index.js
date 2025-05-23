@@ -11,10 +11,11 @@ const schoolRoutes = require('./src/routes/schoolRoutes.js');
 const caseRoutes = require('./src/routes/caseRoutes.js')
 const attendanceRoutes = require('./src/routes/attendanceRoutes.js')
 const academicPerformanceRoutes = require('./src/routes/academicPerformanceRoutes.js');
+const cors = require('cors');
 
 
 
-const cors = require('./src/middlewares/cors.js');
+// const cors = require('./src/middlewares/cors.js');
 const logger = require('./src/middlewares/logger.js');
 const http = require('http');
 
@@ -27,7 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 app.use(responseHandler);
-app.use(cors)
+app.use(cors())
 
 // app.use('/protected', authenticateToken);
 app.use('/auth',  authRoutes);
