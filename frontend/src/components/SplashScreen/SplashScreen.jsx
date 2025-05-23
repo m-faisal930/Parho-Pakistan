@@ -64,7 +64,7 @@ function SplashScreen({ isLoggedIn }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate(isLoggedIn ? '/dashboard' : '/login');
+      navigate(isLoggedIn ? '/dashboard' : '/dashboard');
     }, 4000);
 
     return () => clearTimeout(timer);
