@@ -63,14 +63,14 @@ const FilterPage = () => {
                 }`
               );
               const studentData = await studentResponse.json();
-              console.log('studentData on Filter Page', studentData);
+              // console.log('studentData on Filter Page', studentData);
 
               // Fetch school data
               const schoolResponse = await fetch(
                 `${import.meta.env.VITE_BASE_URL}school/${caseItem.schoolId}`
               );
               const schoolData = await schoolResponse.json();
-              console.log('schoolData on Filter Page', schoolData);
+              // console.log('schoolData on Filter Page', schoolData);
 
               return {
                 ...caseItem,
@@ -226,12 +226,12 @@ const handleClearFilters = () => {
         <NavBar />
         <div className="min-h-screen bg-gray-100 p-4 flex justify-center items-center">
           <div className="text-center">
-            <div
+            {/* <div
               className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
               role="status"
             >
               <span className="visually-hidden">Loading...</span>
-            </div>
+            </div> */}
             <p className="mt-2">Loading cases...</p>
           </div>
         </div>
@@ -389,8 +389,8 @@ const handleClearFilters = () => {
               {expandedFilters.funding_range && (
                 <div className="mt-2">
                   <div className="flex justify-between mb-1">
-                    <span>${filters.funding_range[0]}</span>
-                    <span>${filters.funding_range[1]}</span>
+                    <span>Rs. {filters.funding_range[0]}</span>
+                    <span>Rs. {filters.funding_range[1]}</span>
                   </div>
                   <input
                     type="range"

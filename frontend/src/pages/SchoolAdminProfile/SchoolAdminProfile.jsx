@@ -28,7 +28,7 @@ export default function SchoolAdminProfile() {
       case 'Fee Management':
         return <FeeManagement />;
       case 'Students Management':
-        return <StudentsManagement />;
+        return <StudentsManagement school_id={id} />;
       case 'Grade Management':
         return <AcademicPerformance school_id={id} />;
       case 'Profile':

@@ -26,6 +26,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { schoolId, studentId, date, status } = req.body;
+    console.log(req.body);
 
     // Check if student belongs to this school and is sponsored
     const student = await Student.findOne({

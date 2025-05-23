@@ -29,7 +29,6 @@ import SchoolDetails from './pages/SchoolDetails/SchoolDetails';
 import StudentProfile from './pages/StudentProfile';
 import StudentAdminPage from './pages/StudentAdminPage';
 import SchoolAdmin from './pages/SchoolAdmin';
-import Test from './components/Test';
 function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
   return (
@@ -62,7 +61,7 @@ function App() {
           <Route
             path="/signup"
             element={
-              isAuthenticated ? <Navigate to="/dashboard" /> : <SignupPage />
+              <SignupPage />
             }
           />
 
@@ -83,30 +82,20 @@ function App() {
           <Route
             path="/addstudent"
             element={
-              <ProtectedRoute>
                 <AddStudentPage />
-              </ProtectedRoute>
+
             }
           />
 
           <Route
             path="/addschool"
             element={
-              <ProtectedRoute>
+
                 <AddSchoolPage />
-              </ProtectedRoute>
+
             }
           />
-          {/* <Route
-            path="/studentprofile"
-            element={
-              isAuthenticated ? (
-                <StudentProfilePage />
-              ) : (
-                <Navigate to={'/login'} />
-              )
-            }
-          /> */}
+
           <Route
             path="/sponsership"
             element={
@@ -131,10 +120,10 @@ function App() {
           />
 
           <Route
-            path="/admin/student/id"
+            path="/admin/student/:id"
             element={
               <StudentAdminPage />
-              // <StudentAdminProfile />
+              
             }
           />
           <Route
@@ -144,7 +133,6 @@ function App() {
               <SchoolAdminProfile />
             }
           />
-          <Route path="/test" element={<Test />} />
           <Route path="/admin/donor/id" element={<DonorAdminPage />} />
           {/* <Route path="/admin/school/id" element={<DonorAdminPage />} /> */}
           <Route

@@ -38,7 +38,7 @@ export default function NavBar() {
           navigate('/login');
         };
 
-
+const studentId = localStorage.getItem('studentId');
     // const handleLogout = () => {
     //   dispatch(logout()); // Call the logout action
     //   toast.success(' Logout Successfully!', {
@@ -118,7 +118,7 @@ export default function NavBar() {
                 <Link to="/schools">Partner Schools</Link>
               </li>
               <li className="underline">
-                <Link to="/student/id">Switch to Student</Link>
+                <Link to={`/admin/student/${studentId}`}>Switch to Student</Link>
               </li>
             </ul>
           </div>
@@ -145,7 +145,7 @@ export default function NavBar() {
               <Link to="/schools">Partner Schools</Link>
             </li>
             <li className="underline ml-5">
-              <Link to="/student/id">Switch to Student</Link>
+              <Link to={`admin/student/${studentId}`}>Switch to Student</Link>
             </li>
           </ul>
         </div>

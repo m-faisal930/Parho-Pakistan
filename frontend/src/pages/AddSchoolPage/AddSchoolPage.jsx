@@ -162,6 +162,7 @@ const AddSchoolPage = () => {
         }
       );
       const data = await response.json();
+      localStorage.setItem("studentId", data.student._id)
       return data.secure_url;
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -249,6 +250,7 @@ const AddSchoolPage = () => {
       );
 
       if (res.status === 200 || res.status === 201) {
+        localStorage.setItem('schoolId', res.school._id);
         toast.success('School Added Successfully!', {
           position: 'top-center',
           autoClose: 5000,

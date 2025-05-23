@@ -22,7 +22,7 @@ const AcademicPerformance = ({ school_id }) => {
   );
   const [viewMode, setViewMode] = useState('add');
   const [searchTerm, setSearchTerm] = useState('');
-  const [schoolId] = useState(school_id);
+  const [schoolId, setschoolId] = useState('68190c2fba4e2d52c0bc3346');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
   const [formData, setFormData] = useState({
@@ -55,6 +55,7 @@ const AcademicPerformance = ({ school_id }) => {
           }attendance/students?schoolId=${schoolId}`
         );
         const studentsData = await studentsRes.json();
+        console.log(studentsData);
         if (!studentsRes.ok) throw new Error(studentsData.message);
 
         // Fetch performance records

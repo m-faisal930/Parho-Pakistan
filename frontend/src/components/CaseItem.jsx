@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
 
 export default function CaseItem({ caseItem, student, school }) {
-  // console.log('CaseItem:', student); // Log the caseItem prop
+  console.log('caseitem is :', caseItem); // Log the caseItem prop
 
   const { isDarkMode } = useContext(ThemeContext);
 

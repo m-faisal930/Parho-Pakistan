@@ -23,7 +23,7 @@ const AttendanceManagement = ({school_id}) => {
   const [viewMode, setViewMode] = useState('take'); // 'take' or 'view'
   const [searchTerm, setSearchTerm] = useState('');
   const [schoolId] = useState(school_id); // Replace with actual school ID
-console.log(schoolId)
+// console.log(schoolId)
 
   useEffect(() => {
     console.log('Current viewMode:', viewMode);

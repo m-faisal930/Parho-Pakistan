@@ -204,6 +204,26 @@ const SignupPage = () => {
             Log in
           </button>
         </p>
+        {/* Additional Options */}
+        <p className="mt-4 text-center text-gray-600">
+          Are you a School Looking for global Reach?{' '}
+          <button
+            onClick={() => navigate('/addschool')}
+            className="text-gray-800 hover:underline border-none bg-transparent focus:outline-none"
+          >
+            School
+          </button>
+        </p>
+        {/* Additional Options */}
+        <p className="mt-4 text-center text-gray-600">
+          Register as Student?{' '}
+          <button
+            onClick={() => navigate('/addstudent')}
+            className="text-gray-800 hover:underline border-none bg-transparent focus:outline-none"
+          >
+            Student
+          </button>
+        </p>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import {
 import img1 from "../assets/images/t1.png"
 import img2 from "../assets/images/t2.png"
 import img3 from "../assets/images/t3.jpeg"
-import img4 from "../assets/images/t4.png"
+import img4 from "../assets/images/dp.png"
 
 function TeamCard({ img, name, title }) {
   return (

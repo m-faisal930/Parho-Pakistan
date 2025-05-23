@@ -15,7 +15,11 @@ export const AuthProvider = ({ children }) => {
     console.log(data);
     setToken(data.tokens.token);
   };
-  const logout = () => setToken(null);
+  const logout = () => {
+    setToken(null);
+    isLoggedIn: false;
+  };
+  // const logout = () => setToken(null);
   return (
     <AuthContext.Provider value={{ token, login, logout, isLoggedIn: !!token }}>
       {children}

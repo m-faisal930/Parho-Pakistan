@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from 'react-router-dom';
 
-const StudentsManagement = () => {
+const StudentsManagement = ({ school_id }) => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,10 +21,7 @@ const StudentsManagement = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'detail'
   const [activeTab, setActiveTab] = useState('unverified'); // 'unverified' or 'verified'
-
-  const {schoolId} = useParams(); // Assuming you're using react-router-dom for routing
-
-
+    const [schoolId] = useState(school_id); // Replace with actual school ID
 
   const [showCaseForm, setShowCaseForm] = useState(false);
   const [caseFormData, setCaseFormData] = useState({
@@ -43,7 +40,6 @@ const StudentsManagement = () => {
   const [currentInterest, setCurrentInterest] = useState('');
   const [currentHobby, setCurrentHobby] = useState('');
   const [currentTag, setCurrentTag] = useState('');
-
 
   // Fetch students assigned to this school
   useEffect(() => {
@@ -105,10 +101,10 @@ const StudentsManagement = () => {
     }
   };
 
-const createCaseForStudent = (student) => {
-  setSelectedStudent(student);
-  setShowCaseForm(true);
-};
+  const createCaseForStudent = (student) => {
+    setSelectedStudent(student);
+    setShowCaseForm(true);
+  };
 
   // Filter students based on search and status
   const filteredStudents = students.filter((student) => {
@@ -209,7 +205,6 @@ const createCaseForStudent = (student) => {
 
   const handleCaseSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch('http://localhost:3000/case/add', {
         method: 'POST',
@@ -249,7 +244,6 @@ const createCaseForStudent = (student) => {
       toast.error(error.message);
     }
   };
-
 
   if (loading) {
     return (
@@ -667,7 +661,7 @@ const createCaseForStudent = (student) => {
                   name="title"
                   value={caseFormData.title}
                   onChange={handleCaseInputChange}
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="w-full p-2 border rounded text-light focus:outline-none focus:ring-2 focus:ring-blue-300"
                   required
                 />
               </div>
@@ -685,7 +679,7 @@ const createCaseForStudent = (student) => {
                   value={caseFormData.description}
                   onChange={handleCaseInputChange}
                   rows="4"
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="w-full p-2 border text-light rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
                   required
                 ></textarea>
               </div>
@@ -697,7 +691,7 @@ const createCaseForStudent = (student) => {
                     type="text"
                     value={currentInterest}
                     onChange={(e) => setCurrentInterest(e.target.value)}
-                    className="flex-1 p-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="flex-1 p-2 border text-light rounded-l focus:outline-none focus:ring-2 focus:ring-blue-300"
                     placeholder="Add interest"
                   />
                   <button
@@ -734,7 +728,7 @@ const createCaseForStudent = (student) => {
                     type="text"
                     value={currentHobby}
                     onChange={(e) => setCurrentHobby(e.target.value)}
-                    className="flex-1 p-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="flex-1 p-2 border text-light rounded-l focus:outline-none focus:ring-2 focus:ring-blue-300"
                     placeholder="Add hobby"
                   />
                   <button
@@ -778,7 +772,7 @@ const createCaseForStudent = (student) => {
                           name={category}
                           value={amount}
                           onChange={handleDonationChange}
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+                          className="w-full p-2 border  text-light rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
                           min="0"
                         />
                       </div>
@@ -794,7 +788,7 @@ const createCaseForStudent = (student) => {
                     type="text"
                     value={currentTag}
                     onChange={(e) => setCurrentTag(e.target.value)}
-                    className="flex-1 p-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="flex-1 p-2 border rounded-l text-light focus:outline-none focus:ring-2 focus:ring-blue-300"
                     placeholder="Add tag"
                   />
                   <button
