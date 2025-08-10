@@ -28,7 +28,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 app.use(responseHandler);
-app.use(cors())
+
+app.use(
+  cors({
+    origin:
+      'https://parho-pakistan-backend.vercel.app/' || 'http://localhost:3000',
+    credentials: true, // if you're using cookies or auth headers
+  })
+);
+
+
+// app.use(cors())
 
 // app.use('/protected', authenticateToken);
 app.use('/auth',  authRoutes);
