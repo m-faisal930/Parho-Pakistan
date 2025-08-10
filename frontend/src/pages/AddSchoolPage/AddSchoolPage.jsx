@@ -146,6 +146,19 @@ const AddSchoolPage = () => {
     }
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   const uploadFile = async (file) => {
     if (!file) return null;
 
@@ -192,11 +205,14 @@ const AddSchoolPage = () => {
   };
 
   const handleSubmit = async (e) => {
+    // console.log(registrationCert, accreditationDocs, principalIdProof);
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
 
     try {
+
+      console.log(files.registrationCert, files.accreditationDocs, files.principalIdProof);
       // Upload files only if they exist
       const uploadPromises = [];
       if (files.registrationCert)
