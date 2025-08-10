@@ -19,6 +19,12 @@ const logger = require('./src/middlewares/logger.js');
 const app = express();
 
 
+
+dbConnect();
+
+
+
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,6 +45,5 @@ app.use('/attendance', attendanceRoutes);
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-  dbConnect();
   console.log('Server Running at Port', port);
 });
