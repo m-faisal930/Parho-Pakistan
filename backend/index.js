@@ -24,11 +24,11 @@ const http = require('http');
 const app = express();
 
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 app.use(responseHandler);
-app.use(cors())
 
 // app.use('/protected', authenticateToken);
 app.use('/auth',  authRoutes);
